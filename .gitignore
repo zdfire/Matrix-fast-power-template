@@ -1,32 +1,76 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+#include<bits/stdc++.h>
+using namespace std;
+int n,m;
+struct Ma
+{
+	int a[105][105];
+	void init()
+	{
+		memset(a,0,sizeof(a));
+		for(int i=0;i<n;i++)
+		a[i][i]=1;
+	}
+};
+Ma Mmul(Ma a,Ma b)
+{
+	Ma c;
+	memset(c.a,0,sizeof(c.a));
+	for(int i=0;i<n;i++)
+	for(int j=0;j<n;j++)
+	{		
+		for(int k=0;k<n;k++)
+		{
+			c.a[i][j]+=a.a[i][k]*b.a[k][j];
+			c.a[i][j]%=9973;
+		}
+	}
+	return c;
+}
+void output(Ma a){
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            cout << a.a[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+Ma qpow(Ma a,int n)
+{
+	Ma b;
+	b.init();
+	while(n)
+	{
+		if(n&1)
+		{
+			b=Mmul(b,a);
+			n--;
+		}
+		else
+		{
+			a=Mmul(a,a);
+			n/=2;
+		}
+	}
+	return b;
+}
+int main()
+{
+    int t;
+    scanf("%d",&t);
+    while(t--)
+    {
+    	Ma q;
+    	scanf("%d%d",&n,&m);
+    	for(int i=0;i<n;i++)
+    	for(int j=0;j<n;j++)
+    	scanf("%d",&q.a[i][j]);
+    	int an=0;
+    	Ma ans=qpow(q,m);
+    	//output(q);
+    	for(int i=0;i<n;i++)
+    	//if(ans.a[i][j]>0)
+    	an+=ans.a[i][i];
+    	printf("%d\n",an%9973);
+    }
+    return 0;
+}
